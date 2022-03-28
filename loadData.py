@@ -4,10 +4,10 @@ from dbfread import DBF
 import matplotlib.pyplot as plt
 
 
-table = DBF('FL/FL.dbf')
+# table = DBF('FL/FL.dbf')
 
-for record in table:
-	print(record)
+# for record in table:
+# 	print(record)
 
 
 shapefile = gpd.read_file("FL/FL.shp")
@@ -17,7 +17,8 @@ shapefile = gpd.read_file("FL/FL.shp")
 #extract centroids from shape file
 xCenters = []
 yCenters = []
-for geo in shapefile['geometry']:
+for index, line in shapefile.iterrows():
+	geo = line['geometry']
 	xCenters.append(geo.centroid.x)
 	yCenters.append(geo.centroid.y)
 
