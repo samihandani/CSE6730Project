@@ -159,75 +159,76 @@ class ElectionSim():
 
 
 
-sim = ElectionSim()
+if __name__ == "__main__":
+	sim = ElectionSim()
 
-#first run k-means
-kMeansSims = 0
-electionRecords = sim.runKMeansSimuluations(kMeansSims)
-plt.bar(electionRecords.keys(), electionRecords.values(), color ='darkblue', width = 0.8)
+	#first run k-means
+	kMeansSims = 0
+	electionRecords = sim.runKMeansSimuluations(kMeansSims)
+	plt.bar(electionRecords.keys(), electionRecords.values(), color ='darkblue', width = 0.8)
 
-plt.xlabel("No. of Democratic Represenatives Elected")
-plt.ylabel(f"No. of simulations (out of {kMeansSims})")
+	plt.xlabel("No. of Democratic Represenatives Elected")
+	plt.ylabel(f"No. of simulations (out of {kMeansSims})")
 
-#next, create a gerrymandered distrct using simulated annealing
-numSimulatedAnnealingIters = 1500
-ind = sim.runSimulatedAnnealing(np.ones(27) * 0.5, numSimulatedAnnealingIters)
-sim.shapefile['sim district'] = ind.flatten().astype(np.object0)
-voteRatios = sim.getElectionRatios(ind)
-popRatios = sim.getPopulationRatios(ind)
-print(f"vote ratios: {voteRatios}")
-print(f"pop ratios: {popRatios}")
+	#next, create a gerrymandered distrct using simulated annealing
+	numSimulatedAnnealingIters = 1500
+	ind = sim.runSimulatedAnnealing(np.ones(27) * 0.5, numSimulatedAnnealingIters)
+	sim.shapefile['sim district'] = ind.flatten().astype(np.object0)
+	voteRatios = sim.getElectionRatios(ind)
+	popRatios = sim.getPopulationRatios(ind)
+	print(f"vote ratios: {voteRatios}")
+	print(f"pop ratios: {popRatios}")
 
-#plot the raio of votes from simulated annealing
-district_nums = np.linspace(0, sim.numDistricts, num=sim.numDistricts, endpoint=False)
-f, ax = plt.subplots(1)
-ax.bar(district_nums, voteRatios, 0.35, color='r')
-ax.bar(district_nums, 1-voteRatios, 0.35,bottom=voteRatios, color='b')
-ax.set_xlabel('District')
-ax.set_ylabel("% of Vote")
-ax.set_title('Estimated Vote for Simulated Annealing Gerrymandered District Map')
-# ax.set_xticks(district_nums)
-ax.set_yticks(np.arange(0, 1, 0.05))
+	#plot the raio of votes from simulated annealing
+	district_nums = np.linspace(0, sim.numDistricts, num=sim.numDistricts, endpoint=False)
+	f, ax = plt.subplots(1)
+	ax.bar(district_nums, voteRatios, 0.35, color='r')
+	ax.bar(district_nums, 1-voteRatios, 0.35,bottom=voteRatios, color='b')
+	ax.set_xlabel('District')
+	ax.set_ylabel("% of Vote")
+	ax.set_title('Estimated Vote for Simulated Annealing Gerrymandered District Map')
+	# ax.set_xticks(district_nums)
+	ax.set_yticks(np.arange(0, 1, 0.05))
 
-f, ax2 = plt.subplots(1)
-ax2.bar(district_nums, popRatios, 0.35, color='k')
-ax2.set_xlabel('District')
-ax2.set_ylabel("% of Population")
-ax2.set_title('Estimated Population per District for Gerrymandered District Map')
-# ax.set_xticks(district_nums)
-ax2.set_yticks(np.arange(0, 1, 0.05))
+	f, ax2 = plt.subplots(1)
+	ax2.bar(district_nums, popRatios, 0.35, color='k')
+	ax2.set_xlabel('District')
+	ax2.set_ylabel("% of Population")
+	ax2.set_title('Estimated Population per District for Gerrymandered District Map')
+	# ax.set_xticks(district_nums)
+	ax2.set_yticks(np.arange(0, 1, 0.05))
 
-#plot the map from simulated annealing
-f, ax3 = plt.subplots(1)
-sim.shapefile['sim district'] = sim.shapefile.to_numpy()[:, 12].astype(str).astype(int).astype(str)
-sim.shapefile.plot(ax=ax3, column='sim district')
-ax3.set_title("Gerrymandered District using Simulated Annealing")
+	#plot the map from simulated annealing
+	f, ax3 = plt.subplots(1)
+	sim.shapefile['sim district'] = sim.shapefile.to_numpy()[:, 12].astype(str).astype(int).astype(str)
+	sim.shapefile.plot(ax=ax3, column='sim district')
+	ax3.set_title("Gerrymandered District using Simulated Annealing")
 
-#plot the raio of votes and population from 2010 district map
-f, ax4 = plt.subplots(1)
-voteRatios = sim.getElectionRatios(None)
-popRatios = sim.getPopulationRatios(None)
+	#plot the raio of votes and population from 2010 district map
+	f, ax4 = plt.subplots(1)
+	voteRatios = sim.getElectionRatios(None)
+	popRatios = sim.getPopulationRatios(None)
 
-ax4.bar(district_nums, voteRatios, 0.35, color='r')
-ax4.bar(district_nums, 1-voteRatios, 0.35,bottom=voteRatios, color='b')
-ax4.set_xlabel('District')
-ax4.set_ylabel("% of Vote")
-ax4.set_title('Estimated Vote for 2010 Florida District Map')
-# ax4.set_xticks(district_nums)
-ax4.set_yticks(np.arange(0, 1, 0.05))
+	ax4.bar(district_nums, voteRatios, 0.35, color='r')
+	ax4.bar(district_nums, 1-voteRatios, 0.35,bottom=voteRatios, color='b')
+	ax4.set_xlabel('District')
+	ax4.set_ylabel("% of Vote")
+	ax4.set_title('Estimated Vote for 2010 Florida District Map')
+	# ax4.set_xticks(district_nums)
+	ax4.set_yticks(np.arange(0, 1, 0.05))
 
-f, ax5 = plt.subplots(1)
-ax5.bar(district_nums, popRatios, 0.35, color='k')
-ax5.set_xlabel('District')
-ax5.set_ylabel("% of Population")
-ax5.set_title('Estimated Population per District for 2010 Florida District Map')
-# ax5.set_xticks(district_nums)
-ax5.set_yticks(np.arange(0, 1, 0.05))
+	f, ax5 = plt.subplots(1)
+	ax5.bar(district_nums, popRatios, 0.35, color='k')
+	ax5.set_xlabel('District')
+	ax5.set_ylabel("% of Population")
+	ax5.set_title('Estimated Population per District for 2010 Florida District Map')
+	# ax5.set_xticks(district_nums)
+	ax5.set_yticks(np.arange(0, 1, 0.05))
 
-#plot from 2010 district map
-f, ax6 = plt.subplots(1)
-sim.shapefile['cd113'] = sim.shapefile.to_numpy()[:, 2].astype(str).astype(np.intc).astype(str)
-sim.shapefile.plot(ax=ax6, column='cd113')
-ax6.set_title("2010 Florida House Districts")
+	#plot from 2010 district map
+	f, ax6 = plt.subplots(1)
+	sim.shapefile['cd113'] = sim.shapefile.to_numpy()[:, 2].astype(str).astype(np.intc).astype(str)
+	sim.shapefile.plot(ax=ax6, column='cd113')
+	ax6.set_title("2010 Florida House Districts")
 
-plt.show()
+	plt.show()
